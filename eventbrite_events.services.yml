@@ -2,3 +2,6 @@ services:
   eventbrite_events.api:
     class: Drupal\eventbrite_events\Api
     arguments: ['@http_client', '@config.factory']
+  eventbrite_events.sync_attendees:
+    class: Drupal\eventbrite_events\SyncAttendees
+    arguments: ['@eventbrite_events.api']
