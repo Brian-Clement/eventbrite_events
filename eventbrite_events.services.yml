@@ -5,3 +5,6 @@ services:
   eventbrite_events.sync_attendees:
     class: Drupal\eventbrite_events\SyncAttendees
     arguments: ['@eventbrite_events.api']
+  eventbrite_events.status_handler:
+    class: Drupal\eventbrite_events\StatusHandler
+    arguments: ['@eventbrite_events.api']
