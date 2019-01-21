@@ -1,0 +1,11 @@
+
+eventbrite_events.eventbrite_settings:
+  path: '/admin/config/eventbrite_events/settings'
+  defaults:
+    _form: '\Drupal\eventbrite_events\Form\EventbriteSettings'
+    _title: 'Eventbrite Settings'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE
+

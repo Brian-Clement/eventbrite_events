@@ -1,0 +1,7 @@
+eventbrite_events.eventbrite_settings:
+  title: 'Eventbrite'
+  route_name: eventbrite_events.eventbrite_settings
+  description: 'Manage Eventbrite settings'
+  parent: system.admin_config_services
+  weight: 99
+
