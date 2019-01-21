@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_help().
@@ -20,5 +21,99 @@ function eventbrite_events_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     default:
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ *
+ * Store the event status on the event entity.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ */
+function eventbrite_events_entity_presave(EntityInterface $entity) {
+  if ($entity->bundle() == 'eventbrite_event') {
+    // If eventbrite_event_id is set, sync attendees.
+    $fields = $entity->getFields();
+    if (!$fields['eventbrite_event_id']->isEmpty()) {
+      $eventId = $fields['eventbrite_event_id']->getString();
+
+      // Check event status, save to entity.
+      $status_checker = \Drupal::service('eventbrite_events.status_handler');
+      $event_status = $status_checker->check($eventId);
+
+      $entity->set('eventbrite_event_status', $event_status);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ *
+ * Check for attendees when creating an `eventbrite_event` node.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ */
+function eventbrite_events_entity_insert(EntityInterface $entity) {
+  if ($entity->bundle() == 'eventbrite_event') {
+
+    // If eventbrite_event_id is set, sync attendees.
+    $fields = $entity->getFields();
+
+    if (!$fields['eventbrite_event_id']->isEmpty()) {
+      $event_id = $fields['eventbrite_event_id']->getString();
+      $event_status = $fields['eventbrite_event_status']->getString();
+
+      $sync_service = \Drupal::service('eventbrite_events.sync_attendees');
+      $sync_service->sync($event_id, $event_status);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ *
+ * Check for attendees when updating an `eventbrite_event` node.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ */
+function eventbrite_events_entity_update(EntityInterface $entity) {
+  if ($entity->bundle() == 'eventbrite_event') {
+
+    // If eventbrite_event_id is set, sync attendees.
+    $fields = $entity->getFields();
+
+    if (!$fields['eventbrite_event_id']->isEmpty()) {
+      $event_id = $fields['eventbrite_event_id']->getString();
+      $event_status = $fields['eventbrite_event_status']->getString();
+
+      $sync_service = \Drupal::service('eventbrite_events.sync_attendees');
+      $sync_service->sync($event_id, $event_status);
+    }
+  }
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Periodically update the attendee list by refreshing on cron.
+ */
+function eventbrite_events_cron() {
+
+  // Load all eventbrite_event nodes with an event ID.
+  $event_nids = \Drupal::entityQuery('node')
+    ->condition('status',1)
+    ->condition('type','eventbrite_event')
+    ->condition('eventbrite_event_id',NULL, 'IS NOT NULL')
+    ->execute();
+
+  $event_nodes =  \Drupal\node\Entity\Node::loadMultiple($event_nids);
+
+  // Get the event ID and status and run the sync_attendees service.
+  foreach ($event_nodes as $event) {
+    $event_id = $event->get('eventbrite_event_id')->value;
+    $event_status = $event->get('eventbrite_event_status')->value;
+    $sync_service = \Drupal::service('eventbrite_events.sync_attendees');
+    $sync_service->sync($event_id, $event_status);
   }
 }
