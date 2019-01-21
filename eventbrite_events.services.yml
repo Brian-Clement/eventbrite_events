@@ -1,0 +1,4 @@
+services:
+  eventbrite_events.api:
+    class: Drupal\eventbrite_events\Api
+    arguments: ['@http_client', '@config.factory']
