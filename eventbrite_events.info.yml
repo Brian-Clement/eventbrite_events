@@ -1,0 +1,5 @@
+name: 'Eventbrite Events'
+type: module
+description: 'Add event and attendee entities from Eventbrite'
+core: 8.x
+package: 'Eventbrite Events'
