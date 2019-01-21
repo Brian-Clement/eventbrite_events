@@ -1,0 +1,19 @@
+# field.storage.node.eventbrite_event_id.yml
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+id: node.eventbrite_event_id
+field_name: eventbrite_event_id
+entity_type: node
+type: string
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

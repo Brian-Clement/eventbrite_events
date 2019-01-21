@@ -2,6 +2,8 @@ langcode: en
 status: true
 dependencies:
     config:
+        - field.field.node.eventbrite_event.eventbrite_event_id
+        - field.field.node.eventbrite_event.eventbrite_event_status
         - field.field.node.eventbrite_event.body
         - node.type.eventbrite_event
     module:
@@ -12,10 +14,22 @@ targetEntityType: node
 bundle: eventbrite_event
 mode: default
 content:
+    eventbrite_event_id:
+        label: above
+        type: string
+        weight: 101
+        settings: {  }
+        third_party_settings: {  }
+    eventbrite_event_status:
+        label: above
+        type: string
+        weight: 102
+        settings: {  }
+        third_party_settings: {  }
     body:
         label: hidden
         type: text_default
-        weight: 101
+        weight: 103
         settings: {  }
         third_party_settings: {  }
     links:

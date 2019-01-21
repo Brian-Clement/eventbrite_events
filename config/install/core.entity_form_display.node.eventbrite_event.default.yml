@@ -12,6 +12,20 @@ targetEntityType: node
 bundle: eventbrite_event
 mode: default
 content:
+    eventbrite_event_id:
+        type: string_textfield
+        weight: 101
+        settings:
+            size: 60
+            placeholder: ''
+        third_party_settings: {  }
+    eventbrite_event_status:
+        type: string_textfield
+        weight: 102
+        settings:
+            size: 60
+            placeholder: ''
+        third_party_settings: {  }
     body:
         type: text_textarea_with_summary
         weight: 31
