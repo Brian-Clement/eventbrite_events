@@ -5,6 +5,7 @@ namespace Drupal\eventbrite_events;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Messenger\MessengerInterface;
 
 /**
  * Class Api.
@@ -44,8 +45,8 @@ class Api implements ApiInterface {
    */
   public function __construct(ClientInterface $http_client, ConfigFactory $config_factory) {
     $this->httpClient = $http_client;
-    $this->config = $config_factory->get('eventbrite_events.settings');
-    $this->token = $this->config->get('oauth_token');
+    $this->config = $config_factory->get('eventbrite_events.eventbritesettings');
+    $this->token = $this->config->get('eventbrite_oauth_token');
     $this->base_uri = 'https://www.eventbriteapi.com/v3/';
   }
 
@@ -61,7 +62,7 @@ class Api implements ApiInterface {
     }
     catch (RequestException $exception) {
       $msg = t('Eventbrite "%error"', ['%error' => $exception->getMessage()]);
-      \Drupal::messenger()->addMessage($msg, self::TYPE_ERROR, TRUE);
+      \Drupal::messenger()->addMessage($msg, MessengerInterface::TYPE_ERROR, TRUE);
       \Drupal::logger('eventbrite_events.api')->error('Eventbrite "%error"', ['%error' => $exception->getMessage()]);
       return FALSE;
     }

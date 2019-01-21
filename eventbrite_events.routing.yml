@@ -1,4 +1,3 @@
-
 eventbrite_events.eventbrite_settings:
   path: '/admin/config/eventbrite_events/settings'
   defaults:
