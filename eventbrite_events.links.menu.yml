@@ -5,3 +5,16 @@ eventbrite_events.eventbrite_settings:
   parent: system.admin_config_services
   weight: 99
 
+# Eventbrite attendee menu items definition
+entity.eventbrite_events_attendee.collection:
+  title: 'Eventbrite attendees'
+  route_name: entity.eventbrite_events_attendee.collection
+  description: 'List Eventbrite attendee entities'
+  parent: entity.user.collection
+  weight: 100
+
+eventbrite_events_attendee.admin.structure.settings:
+  title: 'Eventbrite attendee settings'
+  description: 'Configure Eventbrite attendee entities'
+  route_name: eventbrite_events_attendee.settings
+  parent: system.admin_structure

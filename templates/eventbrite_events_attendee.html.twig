@@ -1,0 +1,22 @@
+{#
+/**
+ * @file eventbrite_events_attendee.html.twig
+ * Default theme implementation to present Eventbrite attendee data.
+ *
+ * This template is used when viewing Eventbrite attendee pages.
+ *
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_eventbrite_events_attendee()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('eventbrite_events_attendee') }}>
+  {% if content %}
+    {{- content -}}
+  {% endif %}
+</div>

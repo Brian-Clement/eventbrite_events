@@ -1,0 +1,19 @@
+add eventbrite attendee entities:
+  title: 'Create new Eventbrite attendee entities'
+
+administer eventbrite attendee entities:
+  title: 'Administer Eventbrite attendee entities'
+  description: 'Allow to access the administration form to configure Eventbrite attendee entities.'
+  restrict access: true
+
+delete eventbrite attendee entities:
+  title: 'Delete Eventbrite attendee entities'
+
+edit eventbrite attendee entities:
+  title: 'Edit Eventbrite attendee entities'
+
+view published eventbrite attendee entities:
+  title: 'View published Eventbrite attendee entities'
+
+view unpublished eventbrite attendee entities:
+  title: 'View unpublished Eventbrite attendee entities'
