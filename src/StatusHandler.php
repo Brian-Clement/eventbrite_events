@@ -3,6 +3,7 @@
 namespace Drupal\eventbrite_events;
 
 use Drupal\eventbrite_events\Api;
+use Drupal\node\Entity\Node;
 
 /**
  * Class StatusHandler.
@@ -37,6 +38,21 @@ class StatusHandler {
 
     // Return Eventbrite's status code.
     return $result['status'];
+  }
+
+  /**
+   * Update an Event Node.
+   *
+   * @param \Drupal\node\Entity\Node $event
+   */
+  public function update(Node $event) {
+    // Call the API to check the event status
+    $eventbrite_event_id = $event->get('eventbrite_event_id')->value;
+    $status = $this->check($eventbrite_event_id);
+
+    // Set the status and save the node
+    $event->set('eventbrite_event_status', $status);
+    $event->save();
   }
 
 }
