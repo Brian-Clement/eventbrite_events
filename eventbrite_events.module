@@ -109,8 +109,12 @@ function eventbrite_events_cron() {
 
   $event_nodes =  \Drupal\node\Entity\Node::loadMultiple($event_nids);
 
-  // Get the event ID and status and run the sync_attendees service.
   foreach ($event_nodes as $event) {
+    // Update event status.
+    $status_service = \Drupal::service('eventbrite_events.status_handler');
+    $status_service->update($event);
+
+    // Get the event ID and status and run the sync_attendees service.
     $event_id = $event->get('eventbrite_event_id')->value;
     $event_status = $event->get('eventbrite_event_status')->value;
     $sync_service = \Drupal::service('eventbrite_events.sync_attendees');
