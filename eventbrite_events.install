@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * Update the length of a text field which already contains data.
+ *
+ * @param string $field_name
+ * @param integer $new_length
+ */
+function _eventbrite_change_text_field_max_length($field_name, $new_length) {
+  $field_settings = ['type' => 'varchar', 'length' => $new_length];
+  \Drupal::database()->schema()->changeField('eventbrite_events_attendee', $field_name, $field_name, $field_settings);
+
+  // Flush the caches.
+  drupal_flush_all_caches();
+}
+
+/**
+ * Change length of Eventbrite Events Attendee fields.
+ */
+function eventbrite_events_update_8001(&$sandbox) {
+  _eventbrite_change_text_field_max_length('name', 255);
+  _eventbrite_change_text_field_max_length('email', 255);
+  _eventbrite_change_text_field_max_length('company', 255);
+  _eventbrite_change_text_field_max_length('job_title', 255);
+  _eventbrite_change_text_field_max_length('ticket_class_id', 255);
+  _eventbrite_change_text_field_max_length('attendee_status', 255);
+}
