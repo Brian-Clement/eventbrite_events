@@ -186,7 +186,7 @@ class EventbriteEventsAttendee extends ContentEntityBase implements EventbriteEv
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the attendee.'))
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -224,7 +224,7 @@ class EventbriteEventsAttendee extends ContentEntityBase implements EventbriteEv
       ->setLabel(t('Email'))
       ->setDescription(t('The attendee email.'))
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -317,7 +317,7 @@ class EventbriteEventsAttendee extends ContentEntityBase implements EventbriteEv
       ->setLabel(t('Company'))
       ->setDescription(t('The attendee\'s company.'))
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -338,7 +338,7 @@ class EventbriteEventsAttendee extends ContentEntityBase implements EventbriteEv
       ->setLabel(t('Job Title'))
       ->setDescription(t('The attendee\'s job title.'))
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -380,7 +380,7 @@ class EventbriteEventsAttendee extends ContentEntityBase implements EventbriteEv
       ->setLabel(t('Ticket Class ID'))
       ->setDescription(t('The ID of the ticket class provided by Eventbrite.'))
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -400,7 +400,7 @@ class EventbriteEventsAttendee extends ContentEntityBase implements EventbriteEv
     $fields['attendee_status'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Attendee Status'))
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
