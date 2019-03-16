@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Update the length of a text field which already contains data.
+ * Update the length of existing fields.
  *
  * @param string $field_name
- * @param integer $new_length
+ * @param integer $length
  */
-function _eventbrite_change_text_field_max_length($field_name, $new_length) {
-  $field_settings = ['type' => 'varchar', 'length' => $new_length];
+function _eventbrite_change_text_field_max_length($field_name, $length) {
+  $field_settings = ['type' => 'varchar', 'length' => $length];
   \Drupal::database()->schema()->changeField('eventbrite_events_attendee', $field_name, $field_name, $field_settings);
 
   // Flush the caches.
