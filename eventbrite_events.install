@@ -81,9 +81,9 @@ function eventbrite_events_update_8001(&$sandbox) {
     db_change_varchar_field('eventbrite_events_attendee', $field, 255);
   }
 
-  // Back up, empty database table so entity updates will succeed
+  // Truncate attendee database.
+  // @todo - fix this abomination
   $database = \Drupal::database();
-  $database->query("CREATE TABLE eventbrite_events_attendee_bak AS SELECT * FROM eventbrite_events_attendee");
   $database->query("TRUNCATE TABLE eventbrite_events_attendee");
 
   // Run entity updates
@@ -96,7 +96,6 @@ function eventbrite_events_update_8001(&$sandbox) {
     print_r($e);
   }
 
-  // Reimport the table
-  $database->query("INSERT INTO eventbrite_events_attendee SELECT * FROM eventbrite_events_attendee_bak");
-  $database->query("DROP TABLE eventbrite_events_attendee_bak");
+  // Resync attendees
+  \Drupal::moduleHandler()->invoke('eventbrite_events', 'cron');
 }
