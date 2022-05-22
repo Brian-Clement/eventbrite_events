@@ -2,35 +2,49 @@
 
 namespace Drupal\eventbrite_events;
 
-use Drupal\eventbrite_events\Api;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\eventbrite_events\Entity\EventbriteEventsAttendee;
 
 /**
- * Class SyncAttendees.
+ * Syncs event attendees via EventBrite API..
  */
 class SyncAttendees {
 
   /**
-   * Drupal\eventbrite_events\ApiInterface definition.
+   * The Eventbrite Events API service.
    *
    * @var \Drupal\eventbrite_events\Api
    */
   protected $eventbriteEventsApi;
 
   /**
+   * The Entity Type Manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a new SyncAttendees object.
    *
    * @param \Drupal\eventbrite_events\Api $eventbrite_events_api
+   *   The EventBrite API service.
+   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
+   *   The Entity Type Manager service.
    */
-  public function __construct(Api $eventbrite_events_api) {
+  public function __construct(Api $eventbrite_events_api, EntityTypeManager $entity_type_manager) {
     $this->eventbriteEventsApi = $eventbrite_events_api;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
    * Create attendee entities for the given event.
    *
    * @param int $eventbrite_event_id
+   *   The Eventbrite ID.
    * @param string $event_status
+   *   String describing an event's status.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
@@ -49,6 +63,10 @@ class SyncAttendees {
 
     // Get the attendees response for the given event ID.
     $results = $this->eventbriteEventsApi->connect('get', "events/$eventbrite_event_id/attendees/", $query, []);
+
+    if (!$results) {
+      return;
+    }
 
     // Iterate over each page of response results to load user data.
     foreach ($results as $result) {
@@ -97,7 +115,10 @@ class SyncAttendees {
    * Determine whether the event is still active.
    *
    * @param string $event_status
+   *   Strings describing an event's status.
+   *
    * @return bool
+   *   Whether or not the event is acgive
    */
   protected function activeEvent($event_status) {
     $inactive_states = ['draft', 'ended', 'completed', 'canceled'];
@@ -109,8 +130,12 @@ class SyncAttendees {
 
   /**
    * Look up Drupal user ID by email.
-   * @param $email
-   * @return bool
+   *
+   * @param string $email
+   *   An email address.
+   *
+   * @return int|bool
+   *   The user ID, if it exists.
    */
   protected function getUserIdByEmail($email) {
     $uid = FALSE;
@@ -126,20 +151,23 @@ class SyncAttendees {
 
   /**
    * Look up Event by Eventbrite ID value.
-   * @param $id
-   * @return bool|int|string|null
+   *
+   * @param int $eventbrite_event_id
+   *   The Eventbrite ID.
+   *
+   * @return bool|int
+   *   The event ID, if it exists.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getEventByEventbriteId($id) {
+  protected function getEventByEventbriteId($eventbrite_event_id) {
     $entity_id = FALSE;
 
-    $entities = \Drupal::entityTypeManager()
-      ->getStorage('node')
-      ->loadByProperties([
-        'type' => 'eventbrite_event',
-        'eventbrite_event_id' => $id,
-      ]);
+    $entities = $this->entityTypeManager->getStorage('node')->loadByProperties([
+      'type' => 'eventbrite_event',
+      'eventbrite_event_id' => $eventbrite_event_id,
+    ]);
 
     if ($entities) {
       // For now, assume one Eventbrite Event node.
@@ -148,4 +176,5 @@ class SyncAttendees {
     }
     return $entity_id;
   }
+
 }

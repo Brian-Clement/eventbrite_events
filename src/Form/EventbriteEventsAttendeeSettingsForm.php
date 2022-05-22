@@ -6,7 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class EventbriteEventsAttendeeSettingsForm.
+ * The Attendee Settings form.
  *
  * @ingroup eventbrite_events
  */

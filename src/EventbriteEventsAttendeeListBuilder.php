@@ -13,7 +13,6 @@ use Drupal\Core\Link;
  */
 class EventbriteEventsAttendeeListBuilder extends EntityListBuilder {
 
-
   /**
    * {@inheritdoc}
    */
@@ -31,11 +30,12 @@ class EventbriteEventsAttendeeListBuilder extends EntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     // Get the parent event entity name.
+    /** @var \Drupal\node\Entity\Node $entity */
     $nid = $entity->get('eventbrite_event')->getString();
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
     $parent_event = $node_storage->load($nid);
 
-    /* @var $entity \Drupal\eventbrite_events\Entity\EventbriteEventsAttendee */
+    /** @var \Drupal\eventbrite_events\Entity\EventbriteEventsAttendee $entity */
     $row['id'] = $entity->id();
     $row['name'] = Link::createFromRoute(
       $entity->label(),

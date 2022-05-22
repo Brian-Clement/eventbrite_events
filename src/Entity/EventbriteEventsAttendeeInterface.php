@@ -13,8 +13,6 @@ use Drupal\user\EntityOwnerInterface;
  */
 interface EventbriteEventsAttendeeInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
 
-  // Add get/set methods for your configuration properties here.
-
   /**
    * Gets the Eventbrite attendee name.
    *
@@ -67,7 +65,8 @@ interface EventbriteEventsAttendeeInterface extends ContentEntityInterface, Enti
    * Sets the published status of a Eventbrite attendee.
    *
    * @param bool $published
-   *   TRUE to set this Eventbrite attendee to published, FALSE to set it to unpublished.
+   *   TRUE to set this Eventbrite attendee to published, FALSE to set it to
+   *   unpublished.
    *
    * @return \Drupal\eventbrite_events\Entity\EventbriteEventsAttendeeInterface
    *   The called Eventbrite attendee entity.

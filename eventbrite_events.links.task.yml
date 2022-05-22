@@ -19,4 +19,3 @@ entity.eventbrite_events_attendee.delete_form:
   base_route:  entity.eventbrite_events_attendee.canonical
   title: Delete
   weight: 10
-

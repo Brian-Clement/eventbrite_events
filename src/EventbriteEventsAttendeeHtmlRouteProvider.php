@@ -51,6 +51,7 @@ class EventbriteEventsAttendeeHtmlRouteProvider extends AdminHtmlRouteProvider {
 
       return $route;
     }
+    return NULL;
   }
 
 }
