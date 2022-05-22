@@ -6,7 +6,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class EventbriteSettings.
+ * Settings form for the Eventbrite Events module.
  */
 class EventbriteSettings extends ConfigFormBase {
 
@@ -40,13 +40,6 @@ class EventbriteSettings extends ConfigFormBase {
       '#default_value' => $config->get('eventbrite_oauth_token'),
     ];
     return parent::buildForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    parent::validateForm($form, $form_state);
   }
 
   /**

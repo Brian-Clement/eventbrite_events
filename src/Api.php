@@ -2,15 +2,18 @@
 
 namespace Drupal\eventbrite_events;
 
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Logger\LoggerChannelFactory;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
-use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Messenger\MessengerInterface;
 
 /**
- * Class Api.
+ * The API service.
  */
 class Api implements ApiInterface {
+  use StringTranslationTrait;
 
   /**
    * GuzzleHttp\ClientInterface definition.
@@ -22,9 +25,23 @@ class Api implements ApiInterface {
   /**
    * Drupal\Core\Config\ConfigFactory definition.
    *
-   * @var \Drupal\Core\Config\ConfigFactory;
+   * @var \Drupal\Core\Config\ConfigFactory
    */
   protected $config;
+
+  /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
+   * The log service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactory
+   */
+  protected $logger;
 
   /**
    * Eventbrite API Token.
@@ -38,32 +55,34 @@ class Api implements ApiInterface {
    *
    * @var string
    */
-  protected $base_uri;
+  protected $baseUri;
 
   /**
    * Constructs a new Api object.
    */
-  public function __construct(ClientInterface $http_client, ConfigFactory $config_factory) {
+  public function __construct(ClientInterface $http_client, ConfigFactory $config_factory, MessengerInterface $messenger, LoggerChannelFactory $logger) {
     $this->httpClient = $http_client;
     $this->config = $config_factory->get('eventbrite_events.eventbritesettings');
+    $this->messenger = $messenger;
+    $this->logger = $logger;
     $this->token = $this->config->get('eventbrite_oauth_token');
-    $this->base_uri = 'https://www.eventbriteapi.com/v3/';
+    $this->baseUri = 'https://www.eventbriteapi.com/v3/';
   }
 
   /**
-   * { @inheritdoc }
+   * {@inheritdoc}
    */
   public function connect($method, $endpoint, $query, $body, $page = 1) {
     try {
       $response = $this->httpClient->{$method}(
-        $this->base_uri . $endpoint,
+        $this->baseUri . $endpoint,
         $this->buildOptions($query, $body)
       );
     }
     catch (RequestException $exception) {
-      $msg = t('Eventbrite "%error"', ['%error' => $exception->getMessage()]);
-      \Drupal::messenger()->addMessage($msg, MessengerInterface::TYPE_ERROR, TRUE);
-      \Drupal::logger('eventbrite_events.api')->error('Eventbrite "%error"', ['%error' => $exception->getMessage()]);
+      $msg = $this->t('Eventbrite "%error"', ['%error' => $exception->getMessage()]);
+      $this->messenger->addMessage($msg, $this->messenger::TYPE_ERROR, TRUE);
+      $this->logger->get('eventbrite_events.api')->error('Eventbrite "%error"', ['%error' => $exception->getMessage()]);
       return FALSE;
     }
 
@@ -75,7 +94,7 @@ class Api implements ApiInterface {
 
     if (isset($results['pagination']) && $results['pagination']['has_more_items'] && $results['pagination']['page_number'] < $results['pagination']['page_count']) {
       $query = [
-        'continuation' => $results['pagination']['continuation']
+        'continuation' => $results['pagination']['continuation'],
       ];
 
       $pages += $this->connect($method, $endpoint, $query, $body, $page + 1);

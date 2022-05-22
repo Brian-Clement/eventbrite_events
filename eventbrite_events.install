@@ -1,6 +1,12 @@
 <?php
 
+/**
+ * @file
+ * Contains install and update hooks for the eventbrite_events module.
+ */
+
 use Drupal\Core\Database\Database;
+use Drupal\Core\Entity\EntityStorageException;
 
 /**
  * Change length of a varchar entity field with data, safe with entity-updates.
@@ -20,12 +26,12 @@ use Drupal\Core\Database\Database;
  * @param string $default_value
  *   The default value of the field.
  *
- * See @link https://www.drupal.org/docs/8/api/update-api/updating-database-schema-andor-data-in-drupal-8
+ *   See @link https://www.drupal.org/docs/8/api/update-api/updating-database-schema-andor-data-in-drupal-8.
  */
 function db_change_varchar_field($entity_type_id, $field_name, $field_length, $default_value = '') {
   // Ignore entity manager caches.
-  /** @var \Drupal\Core\Entity\EntityManager $entity_manager */
-  $entity_manager = \Drupal::service('entity.manager');
+  /** @var \Drupal\Core\Entity\EntityTypeManager $entity_manager */
+  $entity_manager = \Drupal::service('entity_type.manager');
   $entity_manager->useCaches(FALSE);
 
   /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $schema_repository */
@@ -74,19 +80,26 @@ function db_change_varchar_field($entity_type_id, $field_name, $field_length, $d
  * Change length of Eventbrite Events Attendee fields.
  */
 function eventbrite_events_update_8001(&$sandbox) {
-  // Existing fields with updated length
-  $updated_fields = ['name', 'email', 'company', 'job_title', 'ticket_class_id', 'attendee_status'];
+  // Existing fields with updated length.
+  $updated_fields = [
+    'name',
+    'email',
+    'company',
+    'job_title',
+    'ticket_class_id',
+    'attendee_status',
+  ];
 
   foreach ($updated_fields as $field) {
     db_change_varchar_field('eventbrite_events_attendee', $field, 255);
   }
 
   // Truncate attendee database.
-  // @todo - fix this abomination
+  // @todo fix this abomination
   $database = \Drupal::database();
   $database->query("TRUNCATE TABLE eventbrite_events_attendee");
 
-  // Run entity updates
+  // Run entity updates.
   try {
     echo "Running entity updates... \n";
     $entityUpdateManager = \Drupal::service('entity.definition_update_manager');
@@ -96,6 +109,6 @@ function eventbrite_events_update_8001(&$sandbox) {
     print_r($e);
   }
 
-  // Resync attendees
+  // Resync attendees.
   \Drupal::moduleHandler()->invoke('eventbrite_events', 'cron');
 }

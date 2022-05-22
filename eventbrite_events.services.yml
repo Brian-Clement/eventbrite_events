@@ -1,10 +1,10 @@
 services:
   eventbrite_events.api:
     class: Drupal\eventbrite_events\Api
-    arguments: ['@http_client', '@config.factory']
+    arguments: ['@http_client', '@config.factory', '@messenger', '@logger.factory']
   eventbrite_events.sync_attendees:
     class: Drupal\eventbrite_events\SyncAttendees
-    arguments: ['@eventbrite_events.api']
+    arguments: ['@eventbrite_events.api', '@entity_type.manager']
   eventbrite_events.status_handler:
     class: Drupal\eventbrite_events\StatusHandler
     arguments: ['@eventbrite_events.api']

@@ -269,7 +269,7 @@ class EventbriteEventsAttendee extends ContentEntityBase implements EventbriteEv
 
     $fields['assoc_drupal_user'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Associated Drupal User'))
-      ->setDescription(t('The user ID of the attendee\'s Drupal user account.'))
+      ->setDescription(t("The user ID of the attendee's Drupal user account."))
       ->setRevisionable(FALSE)
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
@@ -315,7 +315,7 @@ class EventbriteEventsAttendee extends ContentEntityBase implements EventbriteEv
 
     $fields['company'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Company'))
-      ->setDescription(t('The attendee\'s company.'))
+      ->setDescription(t("The attendee's company."))
       ->setSettings([
         'max_length' => 255,
         'text_processing' => 0,
@@ -336,7 +336,7 @@ class EventbriteEventsAttendee extends ContentEntityBase implements EventbriteEv
 
     $fields['job_title'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Job Title'))
-      ->setDescription(t('The attendee\'s job title.'))
+      ->setDescription(t("The attendee's job title."))
       ->setSettings([
         'max_length' => 255,
         'text_processing' => 0,
