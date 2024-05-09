@@ -5,9 +5,9 @@
  * Contains eventbrite_events.module.
  */
 
-use Drupal\node\Entity\Node;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_help().
@@ -100,6 +100,7 @@ function eventbrite_events_cron() {
 
   // Load all eventbrite_event nodes with an event ID.
   $event_nids = \Drupal::entityQuery('node')
+    ->accessCheck(FALSE)
     ->condition('status', 1)
     ->condition('type', 'eventbrite_event')
     ->condition('eventbrite_event_id', NULL, 'IS NOT NULL')
